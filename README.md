@@ -1,4 +1,4 @@
-# bare-surprise
+# bare-surprise ![Make build](https://github.com/AlexTMjugador/bare-surprise/workflows/Make%20build/badge.svg)
 A toy bootloader, operating system and graphical application made from scratch for a birthday surprise, whose total size is less than 12 KiB. That is smaller than a single JPEG image, and 10 times less than the amount of RAM found in a SNES.
 
 ## Overview

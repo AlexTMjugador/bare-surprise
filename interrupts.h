@@ -10,7 +10,7 @@ struct interrupt_descriptor {
 	uint16_t offset_high;		// 16-31
 } __attribute__((packed));
 
-_Static_assert(sizeof(struct interrupt_descriptor) == 8);
+_Static_assert(sizeof(struct interrupt_descriptor) == 8, "The interrupt descriptor must be 8 bytes long");
 
 struct interrupt_descriptor_table {
 	uint16_t length;	// Length of all interrupt descriptors (256 bytes minimum)

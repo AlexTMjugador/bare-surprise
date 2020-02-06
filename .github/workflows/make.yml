@@ -22,3 +22,8 @@ jobs:
       run: sed -Ei 's/, LENGTH = [0-9]*k/, LENGTH = 32k/' linker.ld
     - name: make
       run: make
+    - name: Upload raw disk image
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: disk.img
+        path: build/disk.img

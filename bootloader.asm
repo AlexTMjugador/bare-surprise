@@ -389,9 +389,15 @@ second_stage:
 		CMP ax, 0x004F
 		JNZ print_vesa_error
 
-		; Disable interrupts and load the Global Descriptor Table
-		; we need to switch to protected mode. The GDT also allows
-		; for a flat memory model of 4 GiB
+		; Disable interrupts
+		CLI
+
+		; Enable A20 line for full access to memory
+		CALL enable_a20
+
+		; Load the Global Descriptor Table we need to switch to
+		; protected mode. The GDT also allows for a flat memory
+		; model of 4 GiB
 		XOR ax, ax
 		MOV ds, ax
 		LGDT [gdt_descriptor]
@@ -399,11 +405,50 @@ second_stage:
 		; Switch to protected mode
 		MOV eax, cr0
 		OR eax, 1
-		CLI
 		MOV cr0, eax
 
 		; Far jump to 32-bit code (cleans up the pipeline too)
 		JMP 0x08:complete_protected_mode_entry
+
+; ---------
+; Functions
+; ---------
+
+; Function adapted from https://wiki.osdev.org/A20_Line#Testing_the_A20_line
+enable_a20:
+	MOV ax, 0xFFFF
+	MOV ds, ax
+
+	MOV di, 0x0500
+	MOV si, 0x0510
+
+	MOV al, byte [es:di]
+	PUSH ax
+
+	MOV al, byte [ds:si]
+	PUSH ax
+
+	MOV byte [es:di], 0x00
+	MOV byte [ds:si], 0xFF
+
+	CMP byte [es:di], 0xFF
+
+	POP ax
+	MOV byte [ds:si], al
+
+	POP ax
+	MOV byte [es:di], al
+
+	; Do not enable A20 if already enabled (QEMU does this)
+	JNE .return
+
+	; BIOS call to enable A20. Not universally supported,
+	; but all methods to enable A20 are messy
+	MOV ax, 0x2401
+	INT 0x15
+
+	.return:
+		RET
 
 ; ---------
 ; Constants
@@ -462,33 +507,8 @@ complete_protected_mode_entry:
 	MOV gs, ax
 	MOV ss, ax
 
-	; Enable A20 line if needed
-	CALL check_a20
-
 	; Jump to C!
 	JMP 0x8000
-
-; ---------
-; Functions
-; ---------
- 
-; Checks whether the A20 line is enabled, and if not enables it.
-; Blatantly copied and pasted from https://wiki.osdev.org/A20_Line#Testing_The_A20_Line_From_Protected_Mode
-check_a20:
-	MOV edi, 0x112345  ; Odd megabyte address
-	MOV esi, 0x012345  ; Even megabyte address
-	MOV [esi], esi     ; Making sure that both addresses contain diffrent values
-	MOV [edi], edi     ; (if A20 line is cleared the two pointers would point to the address 0x012345 that would contain 0x112345 (edi)) 
-	CMPSD              ; Compare addresses to see if the're equivalent.
-	JE .enable_a20     ; If equivalent , the A20 line is cleared.
-	RET                ; If not equivalent, A20 line is set.
-
-	.enable_a20:
-		; BIOS call to enable A20. Not universally supported,
-		; but all methods to enable A20 are messy
-		MOV ax, 0x2401
-		INT 0x15
-		RET
 
 ; Pad second sector with zeroes
 TIMES 1024 - ($ - $$) DB 0

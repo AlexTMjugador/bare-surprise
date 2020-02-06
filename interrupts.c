@@ -17,9 +17,13 @@
 #define ICW1_ICW4 0x01
 #define ICW4_8086 0x03 // 8086/88 (MCS-80/85) mode, auto EOI
 
+// The following two variables provide a much more expressive way to calculate IDT start,
+// but are not strictly standards conforming.
+//static const uint32_t idt_size = sizeof(struct interrupt_descriptor) * idt_entries + sizeof(struct interrupt_descriptor_table);
+//static const uint32_t idt_start = 0x7FFFF - idt_size + 1;
+
 static const uint16_t idt_entries = 33; // 33 IRQ. 32 mandatory by Intel in protected mode for processor exceptions
-static const uint32_t idt_size = 8 /* sizeof ID */ * idt_entries + 6 /* sizeof IDT */;
-static const uint32_t idt_start = 0x7FFFF - idt_size + 1;
+static const uint32_t idt_start = 0x7FEF0;
 
 static bool interruptsConfigured = false;
 

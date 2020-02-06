@@ -1,0 +1,22 @@
+name: Project build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install NASM
+      uses: mstksg/get-package@v1
+      with:
+        apt-get: nasm
+    - name: Install BBE
+      uses: mstksg/get-package@v1
+      with:
+        apt-get: bbe
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: make
+      run: make

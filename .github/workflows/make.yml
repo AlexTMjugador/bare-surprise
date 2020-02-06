@@ -1,4 +1,4 @@
-name: Project build
+name: Make build
 
 on: [push, pull_request]
 
@@ -18,5 +18,7 @@ jobs:
         apt-get: bbe
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: CI patch: remove linker size constraints
+      run: sed -Ei 's/, LENGTH = [0-9]*k//' linker.ld
     - name: make
       run: make

@@ -18,7 +18,7 @@ jobs:
         apt-get: bbe
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: 'CI patch: remove linker size constraints'
+    - name: 'CI patch: relax payload size constraints'
       run: sed -Ei 's/, LENGTH = [0-9]*k/, LENGTH = 32k/' linker.ld
     - name: make
       run: make

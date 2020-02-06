@@ -29,7 +29,3 @@ SECTIONS
 
 	__data_end__ = .;
 }
-
-ASSERT(
-	LENGTH(C_CODE_SECTORS) >= (__data_end__ - __data_start__), "The code doesn't fit on the disk sectors reserved for it"
-)

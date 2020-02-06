@@ -34,7 +34,7 @@ $(BUILD_DIR)/bootloader.bin: bootloader.asm $(BUILD_DIR)
 $(BUILD_DIR)/payload.bin: linker.ld $(PAYLOAD_FILES) $(ASSETS_HEADER) $(BUILD_DIR)
 	@echo 'CC $(PAYLOAD_CODE_FILES)'
 	@$(CC) -s -std=c11 -march=i386 -mtune=generic -m32 -masm=intel -fno-pie -mgeneral-regs-only \
-		-Os -ffreestanding -nostdlib -Wl,--build-id=none,--hash-style=sysv,--gc-sections \
+		-Os -ffreestanding -nostdlib -Wl,--build-id=none,--hash-style=sysv,--gc-sections,--print-map \
 		-ffunction-sections -fdata-sections -Tlinker.ld -Wall -Wextra \
 		-o '$@' $(PAYLOAD_CODE_FILES)
 

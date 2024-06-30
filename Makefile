@@ -37,6 +37,9 @@ $(BUILD_DIR)/payload.bin: linker.ld $(PAYLOAD_FILES) $(ASSETS_HEADER) $(BUILD_DI
 		-Os -ffreestanding -nostdlib -Wl,--build-id=none,--hash-style=sysv,--gc-sections,--print-map \
 		-ffunction-sections -fdata-sections -Tlinker.ld -Wall -Wextra --param=min-pagesize=0 \
 		-o '$@' $(PAYLOAD_CODE_FILES)
+	@printf '   Payload size: %s bytes (%s)\n' \
+		"$$(wc -c '$@' | cut -d' ' -f1)" \
+		"$$(wc -c '$@' | cut -d' ' -f1 | numfmt --to=iec-i)"
 
 $(BUILD_DIR)/disk.img: $(BUILD_DIR)/bootloader.bin $(BUILD_DIR)/payload.bin $(BUILD_DIR)
 	@echo 'Generating 12 KiB (24 sectors) disk image: $@'

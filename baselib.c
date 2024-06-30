@@ -40,7 +40,7 @@ unsigned int strtoui(uint8_t** s, size_t size) {
 }
 
 bool isspace(char c) {
-	return c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == 'r';
+	return c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
 }
 
 uint32_t rand(void) {

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eu
 
 if [ $# -lt 1 ] || [ ! -d "$1" ]; then
     printf 'Syntax: %s [final asset directory]\n' "$(basename "$0")"
@@ -8,7 +8,8 @@ fi
 # Delete output file if already present
 rm -rf "$1"/assets.h 2>/dev/null || true
 
-readonly TMP_ASSET_FILE=$(mktemp --tmpdir assets.h.XXX)
+TMP_ASSET_FILE=$(mktemp --tmpdir assets.h.XXX)
+readonly TMP_ASSET_FILE
 
 printf '//Automatically generated header file. Do not edit!\n\n#pragma once\n\n#include <stddef.h>\n\n' > "$TMP_ASSET_FILE"
 

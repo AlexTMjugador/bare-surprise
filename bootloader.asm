@@ -265,7 +265,7 @@ itoa:
 ; ---------
 ; Constants
 ; ---------
-welcome: DB `-----------\r\nTBSBL 1.0\r\n-----------\r\n`, 0
+welcome: DB `---------\r\nTBSBL 1.0\r\n---------\r\n`, 0
 
 supported_str_start: DB 'VBE ', 0
 supported_str_mid: DB ' found. OEM: ', 0

@@ -8,22 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Install NASM
-      uses: mstksg/get-package@v1
-      with:
-        apt-get: nasm
-    - name: Install BBE
-      uses: mstksg/get-package@v1
-      with:
-        apt-get: bbe
+    - name: Install NASM and BBE
+      run: sudo apt-get update && sudo apt-get install nasm bbe
     - name: Checkout code
-      uses: actions/checkout@v2
-    - name: 'CI patch: relax payload size constraints'
-      run: sed -Ei 's/, LENGTH = [0-9]*k/, LENGTH = 32k/' linker.ld
+      uses: actions/checkout@v4
     - name: make
       run: make
     - name: Upload raw disk image
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v4
       with:
         name: disk.img
         path: build/disk.img
